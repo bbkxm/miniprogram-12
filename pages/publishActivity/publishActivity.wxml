@@ -1,0 +1,172 @@
+<view class="container">
+  <!-- 步骤指示器 -->
+  <view class="step-indicator">
+    <view 
+      wx:for="{{steps}}" 
+      wx:key="*this" 
+      class="step-item {{currentStep >= index ? 'active' : ''}}"
+    >
+      <view class="step-num">{{index + 1}}</view>
+      <view class="step-text">{{item}}</view>
+      <view wx:if="{{index < steps.length - 1}}" class="step-line"></view>
+    </view>
+  </view>
+
+  <!-- 步骤内容 -->
+  <view class="step-content">
+    <!-- 基本信息步骤 -->
+    <view wx:if="{{currentStep === 0}}" class="form-step">
+      <view class="form-group">
+        <view class="form-label">活动标题 <text class="required">*</text></view>
+        <input 
+          class="form-control" 
+          placeholder="请输入活动标题" 
+          value="{{formData.title}}"
+          bindinput="onInputTitle"
+        />
+      </view>
+      
+      <view class="form-group">
+        <view class="form-label">活动封面 <text class="required">*</text></view>
+        <view class="form-cover">
+          <block wx:if="{{formData.coverImage}}">
+            <image 
+              class="cover-image" 
+              src="{{formData.coverImage}}" 
+              mode="aspectFill"
+            ></image>
+            <view class="cover-change" bindtap="chooseCoverImage">更换封面</view>
+          </block>
+          <view wx:else class="cover-picker" bindtap="chooseCoverImage">
+            <view class="picker-icon">+</view>
+            <view class="picker-text">上传封面图片</view>
+          </view>
+        </view>
+      </view>
+      
+      <view class="form-group">
+        <view class="form-label">活动描述</view>
+        <textarea 
+          class="form-textarea" 
+          placeholder="请输入活动描述..." 
+          value="{{formData.description}}"
+          bindinput="onInputDescription"
+        ></textarea>
+      </view>
+      
+      <view class="form-group">
+        <view class="form-label">活动时间</view>
+        <view class="time-container">
+          <view class="time-item">
+            <view class="time-label">开始时间</view>
+            <view class="time-picker" bindtap="showDatePicker" data-type="start">
+              {{formData.startTime}}
+            </view>
+          </view>
+          <view class="time-separator">-</view>
+          <view class="time-item">
+            <view class="time-label">结束时间</view>
+            <view class="time-picker" bindtap="showDatePicker" data-type="end">
+              {{formData.endTime}}
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <view class="form-group">
+        <view class="form-label">活动地点 <text class="required">*</text></view>
+        <view class="location-picker" bindtap="chooseLocation">
+          <block wx:if="{{formData.location}}">
+            <view class="location-text">{{formData.location}}</view>
+            <view class="location-coordinates">
+              {{formData.coordinates.latitude}}, {{formData.coordinates.longitude}}
+            </view>
+          </block>
+          <view wx:else class="location-placeholder">
+            <text class="location-icon">📍</text>
+            <text>点击选择位置</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 打卡点设置步骤 -->
+    <view wx:if="{{currentStep === 1}}" class="form-step">
+      <view class="checkpoint-container">
+        <view class="checkpoint-title">打卡点列表</view>
+        
+        <view wx:if="{{formData.checkpoints.length === 0}}" class="checkpoint-empty">
+          <text>暂无打卡点，请点击下方按钮添加</text>
+        </view>
+        
+        <view wx:else class="checkpoint-list">
+          <view 
+            wx:for="{{formData.checkpoints}}" 
+            wx:key="id" 
+            class="checkpoint-item"
+          >
+            <view class="checkpoint-index">{{index + 1}}</view>
+            <view class="checkpoint-info">
+              <view class="checkpoint-name">{{item.name}}</view>
+              <view class="checkpoint-coordinates">
+                {{item.coordinates.latitude}}, {{item.coordinates.longitude}}
+              </view>
+            </view>
+            <view 
+              class="checkpoint-delete" 
+              data-index="{{index}}"
+              catchtap="deleteCheckpoint"
+            >×</view>
+          </view>
+        </view>
+        
+        <view class="checkpoint-add" bindtap="addCheckpoint">
+          <text>+ 添加打卡点</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="btn-container">
+    <button 
+      wx:if="{{currentStep > 0}}" 
+      class="btn-prev" 
+      bindtap="prevStep"
+    >上一步</button>
+    
+    <button 
+      wx:if="{{currentStep < steps.length - 1}}" 
+      class="btn-next" 
+      bindtap="nextStep"
+    >下一步</button>
+    
+    <button 
+      wx:if="{{currentStep === steps.length - 1}}" 
+      class="btn-submit {{submitting ? 'disabled' : ''}}"
+      disabled="{{submitting}}"
+      loading="{{submitting}}"
+      bindtap="submitForm"
+    >{{submitting ? '提交中...' : '创建活动'}}</button>
+  </view>
+
+  <!-- 日期时间选择器 -->
+  <view wx:if="{{showDatePicker}}" class="picker-modal">
+    <view class="picker-mask" catchtap="onDatePickerCancel"></view>
+    <view class="picker-content">
+      <view class="picker-header">
+        <view class="picker-cancel" bindtap="onDatePickerCancel">取消</view>
+        <view class="picker-title">选择时间</view>
+        <view class="picker-confirm" bindtap="onDatePickerConfirm">确定</view>
+      </view>
+      <picker-view 
+        class="picker-view" 
+        value="{{pickerValue}}" 
+        bindchange="onDatePickerChange"
+      >
+        <!-- 日期选择器内容，实际开发中需要结合具体需求实现 -->
+        <text class="picker-placeholder">选择日期时间组件需要具体实现</text>
+      </picker-view>
+    </view>
+  </view>
+</view> 

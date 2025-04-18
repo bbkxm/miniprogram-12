@@ -1,0 +1,56 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/activityDetail/activityDetail",
+    "pages/publishActivity/publishActivity",
+    "pages/profile/profile",
+    "pages/checkin/checkin",
+    "pages/map/map"
+  ],
+  "window": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "打卡小程序",
+    "navigationBarBackgroundColor": "#4285f4"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#4285f4",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "活动广场",
+        "iconPath": "images/home.png",
+        "selectedIconPath": "images/home_selected.png"
+      },
+      {
+        "pagePath": "pages/publishActivity/publishActivity",
+        "text": "发布活动",
+        "iconPath": "images/publish.png",
+        "selectedIconPath": "images/publish_selected.png"
+      },
+      {
+        "pagePath": "pages/map/map",
+        "text": "打卡地图",
+        "iconPath": "images/map.png",
+        "selectedIconPath": "images/map_selected.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "images/profile.png",
+        "selectedIconPath": "images/profile_selected.png"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "您的位置信息将用于打卡和地图展示"
+    }
+  },
+  "style": "v2",
+  "componentFramework": "glass-easel",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}
